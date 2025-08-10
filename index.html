@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevTools Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- <script src="./js/main.js"></script> -->
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="flex min-h-screen">
+    
+    <!-- Sidebar -->
+     <aside class="w-64 bg-gray-900 text-white min-h-full p-6 fixed inset-y-0 left-0">
+    <div id="sidebar-container"></div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <header class="mb-10">
+        <h1 class="text-4xl font-bold text-gray-800">Selamat Datang di DevTools Hub</h1>
+        <p class="text-lg text-gray-600 mt-2">Alat bantu developer untuk tugas harian.</p>
+      </header>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <h3 class="text-xl font-semibold text-gray-800">Code Formatter</h3>
+          <p class="text-gray-600 mt-2">Format kode HTML, CSS, JS, dan JSON secara rapi.</p>
+          <a href="pages/formatter.html" class="inline-block mt-4 px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition">Gunakan</a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <h3 class="text-xl font-semibold text-gray-800">Base64 Tools</h3>
+          <p class="text-gray-600 mt-2">Encode atau decode teks ke / dari Base64.</p>
+          <a href="pages/base64.html" class="inline-block mt-4 px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition">Gunakan</a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <h3 class="text-xl font-semibold text-gray-800">JSON Viewer</h3>
+          <p class="text-gray-600 mt-2">Validasi dan tampilkan JSON dengan struktur pohon.</p>
+          <a href="pages/json-viewer.html" class="inline-block mt-4 px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition">Gunakan</a>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+ <script src="./js/sidebar.js"></script>
+ <script>
+    // Override auto detection for custom pages
+    document.addEventListener('DOMContentLoaded', function() {
+      renderSidebarManual('converter', '../../');
+    });
+  </script>
+</html>

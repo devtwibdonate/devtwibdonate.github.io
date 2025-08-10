@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JSON Viewer - DevTools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="flex min-h-screen">
+   <aside class="w-64 bg-gray-900 text-white min-h-full p-6 fixed inset-y-0 left-0">
+    <div id="sidebar-container"></div>
+    </aside>
+    <main class="flex-1 ml-64 p-8">
+      <h1 class="text-3xl font-bold mb-4">JSON Viewer & Validator</h1>
+      <p class="text-gray-600 mb-4">Masukkan JSON untuk memvalidasi dan melihat strukturnya.</p>
+
+      <textarea id="jsonInput" placeholder="Masukkan JSON..."
+        class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none h-40 mb-4 font-mono text-sm"></textarea>
+      
+      <button onclick="validateAndFormat()"
+        class="px-5 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition mb-4">Validasi & Format</button>
+
+      <pre id="jsonOutput"
+        class="p-4 bg-gray-800 text-green-300 rounded-lg font-mono text-sm whitespace-pre-wrap min-h-32"></pre>
+    </main>
+  </div>
+
+  <script>
+    function validateAndFormat() {
+      const input = document.getElementById('jsonInput').value;
+      const output = document.getElementById('jsonOutput');
+      try {
+        const obj = JSON.parse(input);
+        output.textContent = JSON.stringify(obj, null, 2);
+        output.className = 'p-4 bg-gray-800 text-green-300 rounded-lg font-mono text-sm whitespace-pre-wrap';
+      } catch (e) {
+        output.textContent = 'Error: ' + e.message;
+        output.className = 'p-4 bg-red-900 text-red-200 rounded-lg font-mono text-sm whitespace-pre-wrap';
+      }
+    }
+  </script>
+   <script src="../js/sidebar.js"></script>
+</body>
+</html>

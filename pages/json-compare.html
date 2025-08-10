@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JSON Compare Tool - DevTools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+     <aside class="w-64 bg-gray-900 text-white min-h-full p-6 fixed inset-y-0 left-0">
+      <div id="sidebar-container"></div>
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="flex-1 ml-64 p-8">
+      <h1 class="text-3xl font-bold mb-6 text-gray-900">JSON Compare Tool</h1>
+      <p class="text-gray-600 mb-8">Paste two JSON objects below to compare their differences.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Input JSON 1 -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">JSON 1</label>
+          <textarea id="json1" rows="12" class="w-full p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Paste first JSON here...">{ "name": "John", "age": 30, "city": "New York" }</textarea>
+        </div>
+
+        <!-- Input JSON 2 -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">JSON 2</label>
+          <textarea id="json2" rows="12" class="w-full p-4 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="Paste second JSON here...">{ "name": "Jane", "age": 30, "city": "Los Angeles", "job": "Engineer" }</textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-4 mb-6">
+        <button onclick="compareJSON()" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium">Compare JSON</button>
+        <button onclick="formatJSON('json1')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">Format JSON 1</button>
+        <button onclick="formatJSON('json2')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">Format JSON 2</button>
+        <button onclick="clearInputs()" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-medium">Clear</button>
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="bg-white border border-gray-300 rounded-lg p-5 font-mono text-sm whitespace-pre-wrap hidden">
+        <h3 class="text-lg font-semibold mb-3 text-gray-800">Differences</h3>
+        <pre id="diff-output" class="text-gray-700"></pre>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Compare JSON
+    function compareJSON() {
+      const json1 = document.getElementById('json1').value.trim();
+      const json2 = document.getElementById('json2').value.trim();
+      const resultEl = document.getElementById('result');
+      const diffOutput = document.getElementById('diff-output');
+
+      try {
+        const obj1 = JSON.parse(json1);
+        const obj2 = JSON.parse(json2);
+        const diff = getDifference(obj1, obj2);
+        
+        if (Object.keys(diff).length === 0) {
+          diffOutput.textContent = "✅ No differences found. The JSON objects are identical.";
+        } else {
+          diffOutput.textContent = JSON.stringify(diff, null, 2);
+        }
+        resultEl.classList.remove('hidden');
+      } catch (e) {
+        alert("❌ Invalid JSON format. Please check both inputs.");
+        resultEl.classList.add('hidden');
+      }
+    }
+
+    // Get differences between two objects
+    function getDifference(obj1, obj2) {
+      const diff = {};
+      for (const key in obj1) {
+        if (!(key in obj2)) {
+          diff[key] = { inJSON1: obj1[key], inJSON2: undefined };
+        } else if (JSON.stringify(obj1[key]) !== JSON.stringify(obj2[key])) {
+          if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object' && obj1[key] && obj2[key]) {
+            const nestedDiff = getDifference(obj1[key], obj2[key]);
+            if (Object.keys(nestedDiff).length > 0) {
+              diff[key] = { nested: nestedDiff };
+            }
+          } else {
+            diff[key] = { from: obj1[key], to: obj2[key] };
+          }
+        }
+      }
+      for (const key in obj2) {
+        if (!(key in obj1)) {
+          diff[key] = { inJSON1: undefined, inJSON2: obj2[key] };
+        }
+      }
+      return diff;
+    }
+
+    // Format JSON
+    function formatJSON(id) {
+      const textarea = document.getElementById(id);
+      const value = textarea.value.trim();
+      try {
+        const obj = JSON.parse(value);
+        textarea.value = JSON.stringify(obj, null, 2);
+      } catch (e) {
+        alert("Invalid JSON in " + id);
+      }
+    }
+
+    // Clear inputs
+    function clearInputs() {
+      document.getElementById('json1').value = '';
+      document.getElementById('json2').value = '';
+      document.getElementById('result').classList.add('hidden');
+    }
+  </script>
+  <script src="../js/sidebar.js"></script>
+</body>
+</html>
